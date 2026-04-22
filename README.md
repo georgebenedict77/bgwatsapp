@@ -1,10 +1,14 @@
 # BGWATSAPP
 
+[Launch BGWATSAPP (One-Click)](https://stackblitz.com/github/georgebenedict77/bgwatsapp?startScript=start)
+
 BGWATSAPP is a full-stack WhatsApp-style chat web app with:
 - phone + OTP login
 - direct and group chats
 - contacts directory + chat management
 - black/gold/red interactive theme
+
+If you are viewing this on GitHub, click the link above and it launches instantly in your browser.
 
 ## Launch from GitHub (important)
 
