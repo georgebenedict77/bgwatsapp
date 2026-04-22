@@ -395,6 +395,27 @@ function allowDevOtpCode() {
   return provider === "mimic" || provider === "log";
 }
 
+function isPublicHost(hostname) {
+  const host = String(hostname || "").toLowerCase();
+  return !!host && host !== "localhost" && host !== "127.0.0.1" && host !== "::1";
+}
+
+function inferRequestOrigin(req) {
+  const forwardedHost = String(req.headers["x-forwarded-host"] || "").split(",")[0].trim();
+  const host = forwardedHost || String(req.headers.host || `localhost:${PORT}`).trim();
+  const forwardedProto = String(req.headers["x-forwarded-proto"] || "").split(",")[0].trim();
+  const protocol = forwardedProto || (isPublicHost(host.split(":")[0]) ? "https" : "http");
+  return `${protocol}://${host}`;
+}
+
+function publicAppUrl(req) {
+  const configured = String(process.env.APP_PUBLIC_URL || "").trim();
+  if (configured) {
+    return configured;
+  }
+  return inferRequestOrigin(req);
+}
+
 function clearExpiredOtp() {
   const ts = now();
   for (const [key, entry] of otpChallenges.entries()) {
@@ -1050,6 +1071,22 @@ setInterval(runScheduledQueue, 4000);
 async function handleApi(req, res, pathname, url) {
   const method = req.method || "GET";
   const segments = routeSegments(pathname);
+
+  if (pathname === "/api/public-info" && method === "GET") {
+    const appUrl = publicAppUrl(req);
+    let isPublic = false;
+    try {
+      isPublic = isPublicHost(new URL(appUrl).hostname);
+    } catch (_error) {
+      isPublic = false;
+    }
+    sendJson(res, 200, {
+      ok: true,
+      appUrl,
+      isPublic
+    });
+    return;
+  }
 
   if (pathname === "/api/me" && method === "GET") {
     const session = getSessionFromRequest(req);

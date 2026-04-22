@@ -95,6 +95,56 @@ select {
   color: var(--text-soft);
 }
 
+.live-link-card {
+  margin-top: 14px;
+  border: 1px solid #4a3815;
+  border-radius: 10px;
+  padding: 10px;
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.08), rgba(193, 18, 31, 0.08));
+}
+
+.live-link-card h3 {
+  margin: 0;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  color: #f2d37b;
+}
+
+.live-link-row {
+  margin-top: 8px;
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 8px;
+}
+
+.live-link-row input {
+  min-width: 0;
+  border-radius: 8px;
+  border: 1px solid #4e3e1c;
+  background: #121212;
+  color: var(--text-main);
+  padding: 8px 10px;
+}
+
+.mini-btn {
+  border: 1px solid #7d6024;
+  border-radius: 8px;
+  background: linear-gradient(120deg, rgba(212, 175, 55, 0.24), rgba(193, 18, 31, 0.24));
+  color: #f6e8c3;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 8px 10px;
+  cursor: pointer;
+}
+
+.mini-btn.ghost {
+  background: #151515;
+}
+
+.mini-btn:hover {
+  filter: brightness(1.05);
+}
+
 .auth-tabs {
   display: grid;
   grid-template-columns: 1fr 1fr;

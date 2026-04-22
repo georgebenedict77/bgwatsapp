@@ -13,6 +13,15 @@
     <div class="auth-card">
       <h1>BGWATSAPP</h1>
       <p>Use your phone number to continue.</p>
+      <section class="live-link-card">
+        <h3>Live Website</h3>
+        <div class="live-link-row">
+          <input id="liveAppUrl" type="text" readonly>
+          <button id="copyLiveUrlButton" class="mini-btn" type="button">Copy</button>
+          <a id="openLiveUrlLink" class="mini-btn ghost" href="#" target="_blank" rel="noopener">Open</a>
+        </div>
+        <p id="liveUrlHint" class="status-text"></p>
+      </section>
       <form id="phoneAuthForm" class="auth-form">
         <label for="phoneInput">Phone Number</label>
         <input id="phoneInput" type="tel" autocomplete="tel" placeholder="+254..." required>

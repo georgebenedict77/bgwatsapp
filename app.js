@@ -25,6 +25,10 @@ const els = {
   phoneAuthForm: document.getElementById("phoneAuthForm"),
   phoneInput: document.getElementById("phoneInput"),
   sendCodeButton: document.getElementById("sendCodeButton"),
+  liveAppUrl: document.getElementById("liveAppUrl"),
+  copyLiveUrlButton: document.getElementById("copyLiveUrlButton"),
+  openLiveUrlLink: document.getElementById("openLiveUrlLink"),
+  liveUrlHint: document.getElementById("liveUrlHint"),
   otpForm: document.getElementById("otpForm"),
   otpInput: document.getElementById("otpInput"),
   changePhoneButton: document.getElementById("changePhoneButton"),
@@ -328,6 +332,53 @@ async function request(path, options = {}) {
     throw new Error(payload.error || `Request failed (${response.status})`);
   }
   return payload;
+}
+
+function isPublicUrl(url) {
+  try {
+    const parsed = new URL(url);
+    const host = parsed.hostname.toLowerCase();
+    return host !== "localhost" && host !== "127.0.0.1" && host !== "::1";
+  } catch (_error) {
+    return false;
+  }
+}
+
+function renderLiveAppUrl(url, isPublic = false) {
+  if (!els.liveAppUrl || !els.openLiveUrlLink || !els.liveUrlHint) return;
+  const safeUrl = String(url || window.location.origin || "").trim();
+  if (!safeUrl) return;
+  els.liveAppUrl.value = safeUrl;
+  els.openLiveUrlLink.href = safeUrl;
+  els.liveUrlHint.textContent = isPublic
+    ? "Share this live link with people to open the app."
+    : "This is a local preview link. Set APP_PUBLIC_URL on the server to show your public live URL.";
+}
+
+async function loadLiveAppUrl() {
+  const fallbackUrl = window.location.origin;
+  renderLiveAppUrl(fallbackUrl, isPublicUrl(fallbackUrl));
+  try {
+    const payload = await request("/api/public-info");
+    if (!payload || !payload.appUrl) return;
+    renderLiveAppUrl(payload.appUrl, !!payload.isPublic);
+  } catch (_error) {
+    // keep fallback URL when API is unavailable
+  }
+}
+
+async function copyLiveAppUrl() {
+  if (!els.liveAppUrl || !els.liveUrlHint) return;
+  const url = String(els.liveAppUrl.value || "").trim();
+  if (!url) return;
+  try {
+    await navigator.clipboard.writeText(url);
+    els.liveUrlHint.textContent = "Live link copied.";
+  } catch (_error) {
+    els.liveAppUrl.focus();
+    els.liveAppUrl.select();
+    els.liveUrlHint.textContent = "Press Ctrl+C to copy the live link.";
+  }
 }
 
 function resetAuthFlow() {
@@ -1285,6 +1336,7 @@ function bindEvents() {
   els.phoneAuthForm.addEventListener("submit", requestPhoneCode);
   els.otpForm.addEventListener("submit", verifyPhoneCode);
   els.changePhoneButton.addEventListener("click", changePhoneNumber);
+  els.copyLiveUrlButton.addEventListener("click", copyLiveAppUrl);
   els.otpInput.addEventListener("input", () => {
     els.otpInput.value = els.otpInput.value.replace(/[^\d]/g, "").slice(0, 6);
     els.authError.textContent = "";
@@ -1507,6 +1559,7 @@ async function bootstrap() {
   bindEvents();
   registerServiceWorker();
   resetAuthFlow();
+  await loadLiveAppUrl();
   els.scheduleTimeInput.value = defaultScheduleTimeValue();
 
   try {
