@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0d0d0d">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <title>BGWATSAPP</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <section id="authScreen" class="auth-screen">
+    <div class="auth-card">
+      <h1>BGWATSAPP</h1>
+      <p>Use your phone number to continue.</p>
+      <form id="phoneAuthForm" class="auth-form">
+        <label for="phoneInput">Phone Number</label>
+        <input id="phoneInput" type="tel" autocomplete="tel" placeholder="+254..." required>
+        <button id="sendCodeButton" type="submit">Send Code</button>
+      </form>
+      <form id="otpForm" class="auth-form is-hidden">
+        <label for="otpInput">Verification Code</label>
+        <input id="otpInput" type="text" inputmode="numeric" maxlength="6" placeholder="6-digit code" required>
+        <button type="submit">Verify & Continue</button>
+        <div class="auth-alt">
+          <span>Wrong number?</span>
+          <button id="changePhoneButton" class="link-btn" type="button">Change Phone</button>
+        </div>
+      </form>
+      <p id="authHint" class="status-text"></p>
+      <p id="authError" class="error-text"></p>
+    </div>
+  </section>
+
+  <div id="appShell" class="app-shell is-hidden">
+    <nav class="nav-rail">
+      <div class="nav-rail-top">
+        <button id="navChatsButton" class="nav-rail-btn is-active" type="button" title="Chats" aria-label="Chats">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v12H8l-4 4V4z"></path></svg>
+        </button>
+        <button id="navContactsButton" class="nav-rail-btn" type="button" title="Contacts" aria-label="Contacts">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0 2c5 0 9 2.2 9 5v3H3v-3c0-2.8 4-5 9-5z"></path></svg>
+        </button>
+        <button id="navGroupsButton" class="nav-rail-btn" type="button" title="Groups" aria-label="Groups">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 10a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm7 0a3 3 0 1 1 0-6 3 3 0 0 1 0 6zM3 20c0-2.2 2.7-4 6-4s6 1.8 6 4v1H3v-1zm10.7 1v-1c0-1.2-.4-2.3-1.1-3.3.9-.4 2-.7 3.4-.7 2.9 0 5 1.4 5 3.4V21h-7.3z"></path></svg>
+        </button>
+      </div>
+      <div class="nav-rail-bottom">
+        <button id="navSettingsButton" class="nav-rail-btn" type="button" title="Settings" aria-label="Settings">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8.6A3.4 3.4 0 1 0 12 15.4 3.4 3.4 0 0 0 12 8.6zm9 3.4a7.7 7.7 0 0 0-.1-1l2-1.6-2-3.4-2.4 1a8.8 8.8 0 0 0-1.7-1l-.4-2.6h-4l-.4 2.6a8.8 8.8 0 0 0-1.7 1l-2.4-1-2 3.4 2 1.6a7.7 7.7 0 0 0 0 2l-2 1.6 2 3.4 2.4-1a8.8 8.8 0 0 0 1.7 1l.4 2.6h4l.4-2.6a8.8 8.8 0 0 0 1.7-1l2.4 1 2-3.4-2-1.6c.1-.3.1-.7.1-1z"></path></svg>
+        </button>
+        <button id="navLogoutButton" class="nav-rail-btn danger" type="button" title="Logout" aria-label="Logout">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 17v-2h5V9h-5V7h5a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-5zm-7 3a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h7v2H3v12h7v2H3zm14.3-5.3-1.4-1.4L18.2 11H8v-2h10.2l-2.3-2.3 1.4-1.4L22 10l-4.7 4.7z"></path></svg>
+        </button>
+      </div>
+    </nav>
+
+    <aside id="chatSidebar" class="sidebar">
+      <header class="sidebar-header">
+        <div class="profile-block">
+          <span id="meAvatar" class="avatar avatar-lg">ME</span>
+          <div class="profile-meta">
+            <span class="brand-tag">BGWATSAPP</span>
+            <h2 id="meUsername">@user</h2>
+            <p id="mePersonInfo" class="profile-info"></p>
+          </div>
+        </div>
+        <div class="sidebar-head-copy">
+          <h4 id="sidebarTitle">Chats</h4>
+          <p id="sidebarSubtitle">Recent conversations</p>
+        </div>
+      </header>
+
+      <div class="search-wrap">
+        <span class="search-icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15.5 14 5 5-1.5 1.5-5-5v-.8l-.3-.3a6.5 6.5 0 1 1 1.5-1.5l.3.3h.8zm-6 0a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9z"></path></svg>
+        </span>
+        <label class="sr-only" for="chatSearchInput">Search chats</label>
+        <input id="chatSearchInput" type="search" placeholder="Search or start new chat">
+      </div>
+
+      <div id="directoryTools" class="directory-tools is-hidden">
+        <button id="openContactCreateButton" class="tool-btn" type="button">New Contact</button>
+        <button id="openGroupCreateButton" class="tool-btn" type="button">New Group</button>
+      </div>
+
+      <nav class="chat-filters">
+        <button class="filter-chip is-active" type="button" data-filter="all">All</button>
+        <button class="filter-chip" type="button" data-filter="unread">Unread</button>
+        <button class="filter-chip" type="button" data-filter="groups">Groups</button>
+        <button class="filter-chip" type="button" data-filter="favorites">Favorites</button>
+      </nav>
+
+      <ul id="chatList" class="chat-list"></ul>
+    </aside>
+
+    <main class="conversation">
+      <header class="conversation-header">
+        <button id="mobileBackButton" class="mobile-btn icon-btn" type="button" title="Back" aria-label="Back">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 18.5 9 12l6.5-6.5L14 4l-8 8 8 8z"></path></svg>
+        </button>
+        <span id="activeChatAvatar" class="avatar">C</span>
+        <div class="conversation-meta">
+          <h3 id="activeChatName">Select a chat</h3>
+          <p id="activeChatStatus">No active conversation</p>
+        </div>
+        <div class="conversation-actions">
+          <button id="searchInChatButton" class="icon-btn" type="button" title="Search in chat" aria-label="Search in chat">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15.5 14 5 5-1.5 1.5-5-5v-.8l-.3-.3a6.5 6.5 0 1 1 1.5-1.5l.3.3h.8zm-6 0a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9z"></path></svg>
+          </button>
+          <button id="favoriteChatButton" class="icon-btn" type="button" title="Favorite chat" aria-label="Favorite chat">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 17.3-5.5 3 1-6.2L3 9.5l6.3-1 2.7-5.7 2.7 5.7 6.3 1-4.5 4.6 1 6.2z"></path></svg>
+          </button>
+          <button id="muteChatButton" class="icon-btn" type="button" title="Mute chat" aria-label="Mute chat">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.5 12a4.5 4.5 0 0 1-7.7 3.2l1.4-1.4A2.5 2.5 0 0 0 14.5 12c0-.7-.3-1.3-.7-1.8l1.4-1.4A4.4 4.4 0 0 1 16.5 12zM5 9v6h4l5 5V4L9 9H5zm13.2-.2L21 11.6l2.8-2.8 1.4 1.4-2.8 2.8 2.8 2.8-1.4 1.4-2.8-2.8-2.8 2.8-1.4-1.4 2.8-2.8-2.8-2.8 1.4-1.4z"></path></svg>
+          </button>
+          <button id="pinChatButton" class="icon-btn" type="button" title="Pin chat" aria-label="Pin chat">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m16 3 5 5-2 2-1.2-1.2-3 3V16l-2 2v3h-2v-3l-2-2v-4.2l-3-3L4 10l5-5 7 7 3-3L16 6z"></path></svg>
+          </button>
+          <button id="markReadButton" class="icon-btn" type="button" title="Mark read" aria-label="Mark read">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m2 13 1.4-1.4L8 16.2 20.6 3.6 22 5 8 19z"></path></svg>
+          </button>
+        </div>
+      </header>
+
+      <section id="messageList" class="message-list"></section>
+
+      <form id="messageForm" class="composer">
+        <div id="replyBar" class="reply-bar is-hidden">
+          <div class="reply-meta">
+            <small id="replyToName">Replying</small>
+            <p id="replyToText">Message preview</p>
+          </div>
+          <button id="cancelReplyButton" class="icon-btn" type="button" title="Cancel reply" aria-label="Cancel reply">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m18.3 5.7-1.4-1.4L12 9.2 7.1 4.3 5.7 5.7 10.6 10.6 5.7 15.5l1.4 1.4 4.9-4.9 4.9 4.9 1.4-1.4-4.9-4.9z"></path></svg>
+          </button>
+        </div>
+        <button class="icon-btn ghost" type="button" aria-label="Emoji">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-3 8a1.4 1.4 0 1 1 0-2.8A1.4 1.4 0 0 1 9 10zm6 0a1.4 1.4 0 1 1 0-2.8A1.4 1.4 0 0 1 15 10zm-6 3h6a3 3 0 0 1-6 0z"></path></svg>
+        </button>
+        <label class="sr-only" for="messageInput">Message</label>
+        <input id="messageInput" type="text" placeholder="Type a message">
+        <button class="icon-btn ghost" type="button" aria-label="Attach">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.5 6.5v9.8a4.3 4.3 0 1 1-8.6 0V5.7a2.8 2.8 0 1 1 5.6 0V15a1.3 1.3 0 1 1-2.6 0V7.4H9V15a3.2 3.2 0 1 0 6.4 0V5.7a4.7 4.7 0 1 0-9.4 0v10.6a6.2 6.2 0 1 0 12.4 0V6.5h-1.9z"></path></svg>
+        </button>
+        <button type="submit" class="send-btn">Send</button>
+      </form>
+    </main>
+  </div>
+
+  <aside id="settingsDrawer" class="settings-drawer is-hidden">
+    <header>
+      <h3>BGWATSAPP Mod Settings</h3>
+      <button id="closeSettingsButton" class="close-btn" type="button">Close</button>
+    </header>
+
+    <section class="setting-block">
+      <h4>Privacy</h4>
+      <label><input id="toggleReadReceipts" type="checkbox"> Read receipts</label>
+      <label><input id="toggleTyping" type="checkbox"> Typing indicators</label>
+      <label><input id="toggleAutoReply" type="checkbox"> Auto reply</label>
+      <label><input id="toggleHideOnline" type="checkbox"> Hide online status</label>
+      <label><input id="toggleFreezeLastSeen" type="checkbox"> Freeze last seen</label>
+      <label><input id="toggleAntiDelete" type="checkbox"> Anti-delete mode</label>
+      <label><input id="toggleDnd" type="checkbox"> DND mode</label>
+    </section>
+
+    <section class="setting-block">
+      <h4>Appearance</h4>
+      <label>Accent color
+        <input id="accentColorInput" type="color">
+      </label>
+      <label>Font scale
+        <input id="fontScaleInput" type="range" min="90" max="115" step="1">
+      </label>
+    </section>
+
+    <section class="setting-block">
+      <h4>App Lock</h4>
+      <label><input id="toggleAppLock" type="checkbox"> Enable app lock</label>
+      <label>PIN (4 digits)
+        <input id="appLockPinInput" type="password" inputmode="numeric" maxlength="4" placeholder="2580">
+      </label>
+    </section>
+
+    <section class="setting-block">
+      <h4>Auto Reply</h4>
+      <label for="customAutoReplyInput">Custom reply text</label>
+      <input id="customAutoReplyInput" type="text" placeholder="Optional custom auto reply">
+    </section>
+
+    <section class="setting-block">
+      <h4>Broadcast</h4>
+      <label for="broadcastInput">Message to all direct chats</label>
+      <input id="broadcastInput" type="text" placeholder="Broadcast message">
+      <button id="broadcastButton" type="button">Send Broadcast</button>
+    </section>
+
+    <section class="setting-block">
+      <h4>Scheduler</h4>
+      <label for="scheduleChatSelect">Chat</label>
+      <select id="scheduleChatSelect"></select>
+      <label for="scheduleTextInput">Message</label>
+      <input id="scheduleTextInput" type="text" placeholder="Scheduled message">
+      <label for="scheduleTimeInput">Send at</label>
+      <input id="scheduleTimeInput" type="datetime-local">
+      <button id="scheduleButton" type="button">Schedule Message</button>
+      <ul id="scheduledList" class="scheduled-list"></ul>
+    </section>
+
+    <p id="settingsStatus" class="status-text"></p>
+  </aside>
+
+  <section id="lockOverlay" class="lock-overlay is-hidden">
+    <div class="lock-card">
+      <h3>BGWATSAPP Locked</h3>
+      <p>Enter your PIN to continue.</p>
+      <form id="unlockForm">
+        <label class="sr-only" for="unlockPin">Unlock PIN</label>
+        <input id="unlockPin" type="password" inputmode="numeric" maxlength="4" required>
+        <button type="submit">Unlock</button>
+      </form>
+      <p id="unlockError" class="error-text"></p>
+    </div>
+  </section>
+
+  <section id="actionModal" class="action-modal is-hidden">
+    <div class="action-modal-card">
+      <header class="action-header">
+        <h3 id="actionModalTitle">Start New Chat</h3>
+        <button id="actionCloseButton" class="close-btn" type="button">Close</button>
+      </header>
+
+      <form id="directActionForm" class="action-form">
+        <label for="directTargetInput">Username, Phone, or Email</label>
+        <input id="directTargetInput" type="text" placeholder="@username or +254... or email">
+        <div class="action-buttons">
+          <button id="directOpenContactButton" type="button" class="ghost-btn">Create Contact</button>
+          <button type="submit">Start Chat</button>
+        </div>
+        <p id="directError" class="error-text"></p>
+      </form>
+
+      <form id="contactActionForm" class="action-form is-hidden">
+        <label for="contactFullName">Full Name</label>
+        <input id="contactFullName" type="text" required>
+        <label for="contactPhone">Phone</label>
+        <input id="contactPhone" type="tel" placeholder="+254...">
+        <label for="contactEmail">Email</label>
+        <input id="contactEmail" type="email" placeholder="name@example.com">
+        <label for="contactUsername">Username (optional)</label>
+        <input id="contactUsername" type="text" placeholder="Auto-generated if blank">
+        <div class="action-buttons">
+          <button id="contactBackButton" type="button" class="ghost-btn">Back</button>
+          <button type="submit">Save Contact</button>
+        </div>
+        <p id="contactError" class="error-text"></p>
+      </form>
+
+      <form id="groupActionForm" class="action-form is-hidden">
+        <label for="groupNameInput">Group Name</label>
+        <input id="groupNameInput" type="text" required>
+        <label for="groupMembersInput">Members (comma-separated usernames)</label>
+        <input id="groupMembersInput" type="text" placeholder="alice, bob, charlie">
+        <div class="action-buttons">
+          <button type="submit">Create Group</button>
+        </div>
+        <p id="groupError" class="error-text"></p>
+      </form>
+    </div>
+  </section>
+
+  <script src="/app.js"></script>
+</body>
+</html>

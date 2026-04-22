@@ -1,0 +1,7 @@
+.env
+node_modules/
+server.out.log
+server.err.log
+server3900.out.log
+server3900.err.log
+data/db.json
