@@ -1,6 +1,8 @@
 # BGWATSAPP
 
-[Launch BGWATSAPP (One-Click)](https://stackblitz.com/github/georgebenedict77/bgwatsapp?startScript=start)
+[Launch BGWATSAPP (One-Click Replit)](https://replit.com/github.com/georgebenedict77/bgwatsapp)
+
+[Launch BGWATSAPP (Backup StackBlitz)](https://stackblitz.com/fork/github/georgebenedict77/bgwatsapp?startScript=start)
 
 BGWATSAPP is a full-stack WhatsApp-style chat web app with:
 - phone + OTP login
@@ -8,7 +10,7 @@ BGWATSAPP is a full-stack WhatsApp-style chat web app with:
 - contacts directory + chat management
 - black/gold/red interactive theme
 
-If you are viewing this on GitHub, click the link above and it launches instantly in your browser.
+If one launch link fails on your network/browser, use the other one above.
 
 ## Launch from GitHub (important)
 
